@@ -66,6 +66,25 @@ const {
     </main>
     <Footer />
 
+    <!-- Scroll progress als zichvullende koffiekop -->
+    <button type="button" data-scroll-cup class="scroll-cup" aria-label="Terug naar boven">
+      <svg viewBox="0 0 48 56" width="36" height="42" aria-hidden="true">
+        <defs>
+          <clipPath id="cup-inside">
+            <path d="M 8 18 H 34 V 40 Q 34 46 28 46 H 14 Q 8 46 8 40 Z"/>
+          </clipPath>
+        </defs>
+        <g class="scroll-cup__steam" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round">
+          <path d="M 16 10 q 2.4 -3.5 0 -7"/>
+          <path d="M 22 10 q 2.4 -3.5 0 -7"/>
+          <path d="M 28 10 q 2.4 -3.5 0 -7"/>
+        </g>
+        <path d="M 8 18 H 34 V 40 Q 34 46 28 46 H 14 Q 8 46 8 40 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <path d="M 34 24 q 7 0 7 6 q 0 6 -7 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <rect class="scroll-cup__fill" x="8" y="46" width="26" height="0" fill="#B0623A" clip-path="url(#cup-inside)" data-fill/>
+      </svg>
+    </button>
+
     <script>
       // Demo intro dismiss
       const intro = document.querySelector<HTMLElement>("[data-intro]");
@@ -125,6 +144,30 @@ const {
         const onScroll = () => header.classList.toggle("is-scrolled", window.scrollY > 8);
         onScroll();
         window.addEventListener("scroll", onScroll, { passive: true });
+      }
+
+      // Coffee-cup scroll progress
+      const cup = document.querySelector<HTMLButtonElement>("[data-scroll-cup]");
+      const cupFill = document.querySelector<SVGRectElement>("[data-fill]");
+      if (cup && cupFill) {
+        const cupTopY = 18;
+        const cupBottomY = 46;
+        const cupSpan = cupBottomY - cupTopY;
+        const updateCup = () => {
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const progress = docHeight > 0 ? Math.min(1, Math.max(0, window.scrollY / docHeight)) : 0;
+          const fillHeight = cupSpan * progress;
+          cupFill.setAttribute("y", String(cupBottomY - fillHeight));
+          cupFill.setAttribute("height", String(fillHeight));
+          cup.classList.toggle("is-visible", window.scrollY > 240);
+          cup.classList.toggle("is-full", progress > 0.94);
+        };
+        updateCup();
+        window.addEventListener("scroll", updateCup, { passive: true });
+        window.addEventListener("resize", updateCup);
+        cup.addEventListener("click", () => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
       }
     </script>
   </body>
