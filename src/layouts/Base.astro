@@ -146,6 +146,19 @@ const {
         window.addEventListener("scroll", onScroll, { passive: true });
       }
 
+      // Menu tabs
+      const menuTabs = document.querySelectorAll<HTMLButtonElement>("[data-menu-tab]");
+      const menuPanels = document.querySelectorAll<HTMLElement>("[data-menu-panel]");
+      menuTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const idx = tab.getAttribute("data-menu-tab");
+          menuTabs.forEach((t) => t.setAttribute("aria-selected", t === tab ? "true" : "false"));
+          menuPanels.forEach((p) => {
+            p.hidden = p.getAttribute("data-menu-panel") !== idx;
+          });
+        });
+      });
+
       // Coffee-cup scroll progress
       const cup = document.querySelector<HTMLButtonElement>("[data-scroll-cup]");
       const cupFill = document.querySelector<SVGRectElement>("[data-fill]");

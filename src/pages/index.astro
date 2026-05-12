@@ -246,30 +246,55 @@ const marquee = [
 
   <!-- OVER -->
   <section id="over" class="py-24 md:py-32">
-    <div class="container-kp grid lg:grid-cols-12 gap-12 lg:gap-20">
+    <div class="container-kp grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
       <div class="lg:col-span-5" data-reveal>
         <p class="eyebrow">Over ons</p>
         <h2 class="text-4xl sm:text-5xl lg:text-6xl mt-5 font-display">
           Van harte welkom!
         </h2>
-        <div class="mt-10 image-grain rounded-(--radius-card) overflow-hidden border border-(--color-line)">
+        <div class="mt-8 image-grain rounded-(--radius-card) overflow-hidden border border-(--color-line)">
           <img
             src="/photos/breakfast-flatlay.jpg"
             alt="Slow breakfast op tafel — pannenkoeken, granola, smoothie en koffie"
-            class="w-full aspect-[4/5] object-cover"
+            class="w-full aspect-[4/3] object-cover"
             loading="lazy"
           />
         </div>
       </div>
-      <div class="lg:col-span-6 lg:col-start-7 space-y-6 text-(--color-ink-2)/85 text-[1.15rem] leading-relaxed" data-reveal>
-        <p>
+      <div class="lg:col-span-6 lg:col-start-7" data-reveal>
+        <p class="text-(--color-ink-2)/85 text-[1.18rem] leading-relaxed">
           U kunt in het prachtig Koffiepand aan de Korte Geere 19 te Middelburg terecht voor heerlijke koffie en thee, verschillende soorten (biologische) frisdranken, bier, wijn en een ruime keuze aan (vegan) taartjes, cakes, slow breakfast, lunch en afternoon snacks!
         </p>
-        <div class="flex flex-wrap gap-2 pt-4">
+        <div class="flex flex-wrap gap-2 mt-7">
           <span class="tag-pill">Biologisch</span>
           <span class="tag-pill">Vegan op aanvraag</span>
           <span class="tag-pill">Glutenvrij op aanvraag</span>
           <span class="tag-pill">Ook to go</span>
+        </div>
+
+        <div class="mt-10 grid sm:grid-cols-2 gap-3">
+          <div class="over-info">
+            <Icon name="map-pin" size={18} class="text-(--color-moss)" />
+            <div>
+              <p class="eyebrow">Bezoek</p>
+              <p class="mt-1.5 text-sm leading-snug">Korte Geere 19<br/>Middelburg</p>
+            </div>
+          </div>
+          <div class="over-info">
+            <Icon name="clock" size={18} class="text-(--color-moss)" />
+            <div>
+              <p class="eyebrow">Open</p>
+              <p class="mt-1.5 text-sm leading-snug">Dinsdag t/m zaterdag<br/>9:00 — 17:30</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#menu" class="btn-primary text-sm">
+            Bekijk het menu
+            <Icon name="arrow-right" size={14} />
+          </a>
+          <a href="#bezoek" class="btn-ghost text-sm">Reserveer een tafel</a>
         </div>
       </div>
     </div>
@@ -321,16 +346,35 @@ const marquee = [
         </div>
       </div>
 
-      <div class="grid lg:grid-cols-2 gap-x-16 gap-y-14">
-        {menuCategories.map((cat) => (
-          <div data-reveal>
-            <div class="flex items-baseline justify-between gap-6 pb-5 border-b border-(--color-line)">
-              <h3 class="text-3xl font-display">{cat.tag}</h3>
-              <span class="text-xs uppercase tracking-[0.18em] text-(--color-ink-soft) text-right max-w-[55%]">{cat.subtitle}</span>
-            </div>
-            <ul class="mt-6 space-y-6">
+      <div class="menu-tabs-wrap" data-reveal>
+        <div class="menu-tabs" role="tablist" aria-label="Menu categorieën">
+          {menuCategories.map((cat, i) => (
+            <button
+              type="button"
+              role="tab"
+              data-menu-tab={i}
+              aria-selected={i === 0 ? "true" : "false"}
+              aria-controls={`menu-panel-${i}`}
+              class="menu-tab"
+            >
+              {cat.tag}
+              <span class="menu-tab__count">{cat.items.length}</span>
+            </button>
+          ))}
+        </div>
+
+        {menuCategories.map((cat, i) => (
+          <div
+            role="tabpanel"
+            id={`menu-panel-${i}`}
+            data-menu-panel={i}
+            class="menu-panel"
+            hidden={i !== 0}
+          >
+            <p class="text-xs uppercase tracking-[0.18em] text-(--color-ink-soft) mb-6">{cat.subtitle}</p>
+            <ul class="menu-items">
               {cat.items.map((it) => (
-                <li class="flex gap-6 items-start">
+                <li class="menu-item">
                   <div class="flex-1">
                     <div class="flex items-baseline justify-between gap-4">
                       <h4 class="text-lg font-display">
@@ -340,7 +384,7 @@ const marquee = [
                         )}
                       </h4>
                       <span class="hidden sm:block flex-1 mx-3 border-b border-dotted border-(--color-line) translate-y-[-4px]"></span>
-                      <span class="font-mono text-sm tabular-nums text-(--color-ink-2)">€{it.price}</span>
+                      <span class="font-mono text-sm tabular-nums text-(--color-ink-2) whitespace-nowrap">€{it.price}</span>
                     </div>
                     {it.desc && <p class="text-sm text-(--color-ink-soft) mt-1.5 leading-relaxed">{it.desc}</p>}
                   </div>
@@ -640,6 +684,114 @@ const marquee = [
   @media (min-width: 1024px) {
     .gallery-item { min-height: unset; height: 100%; }
   }
+
+  /* MENU TABS */
+  .menu-tabs-wrap {
+    background: var(--color-cream);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-jumbo);
+    padding: 1rem 1rem 2rem;
+  }
+  @media (min-width: 768px) {
+    .menu-tabs-wrap { padding: 1.5rem 2rem 2.5rem; }
+  }
+  @media (min-width: 1280px) {
+    .menu-tabs-wrap { padding: 1.75rem 2.75rem 3rem; }
+  }
+
+  .menu-tabs {
+    display: flex;
+    gap: 0.45rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0.5rem 0.25rem;
+    margin: -0.5rem -0.25rem 1.5rem;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+  .menu-tabs::-webkit-scrollbar { display: none; }
+  .menu-tabs::after {
+    content: "";
+    flex: 0 0 0.5rem;
+  }
+
+  .menu-tab {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.15rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-line);
+    background: transparent;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
+    white-space: nowrap;
+  }
+  .menu-tab:hover { border-color: var(--color-ink); }
+  .menu-tab[aria-selected="true"] {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    border-color: var(--color-ink);
+  }
+  .menu-tab__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 0.4rem;
+    border-radius: 999px;
+    background: var(--color-bone-2);
+    color: var(--color-ink-soft);
+    font-size: 0.7rem;
+    font-weight: 500;
+    font-family: var(--font-sans);
+  }
+  .menu-tab[aria-selected="true"] .menu-tab__count {
+    background: var(--color-terra);
+    color: var(--color-cream);
+  }
+
+  .menu-panel {
+    animation: menu-fade 0.45s var(--ease-out-quart);
+  }
+  .menu-panel[hidden] { display: none; }
+  @keyframes menu-fade {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .menu-items {
+    display: grid;
+    gap: 1.4rem;
+  }
+  @media (min-width: 1024px) {
+    .menu-items {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 3.5rem;
+      row-gap: 1.6rem;
+    }
+  }
+  .menu-item { list-style: none; }
+
+  /* OVER ons - info blokjes */
+  .over-info {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    padding: 1rem 1.15rem;
+    background: var(--color-cream);
+    border: 1px solid var(--color-line);
+    border-radius: 14px;
+  }
+  .over-info svg { flex-shrink: 0; margin-top: 2px; }
 
   /* REVIEWS */
   .review-card {
