@@ -118,6 +118,31 @@ const gallery = [
   { src: "/photos/lokaal-bier.jpg", alt: "Lokaal bier gebrouwen door vrouwen", span: "lg:col-span-4" },
 ];
 
+// Reviews letterlijk overgenomen uit Google (Het Koffiepand, Middelburg)
+const reviews = [
+  {
+    quote: "Wat een leuk pittoresk tentje. Je zou er zo maar voorbij lopen. Binnen stap je een klein tentje binnen waar een kneuterige gezellige sfeer hangt. We hebben genoten van een heerlijk ontbijt en met een glimlach afgerekend, want het waren normale prijzen voor heerlijk eten.",
+    name: "V & M van Iwaarden",
+    meta: "Local Guide · 112 reviews",
+    when: "2 jaar geleden",
+    stars: 5,
+  },
+  {
+    quote: "Vanmorgen een appje gedaan om een reservering te doen, vanmiddag heerlijk met mijn gezin geluncht. Alles was heerlijk en de bediening enorm vriendelijk! Je voelt je echt welkom en de menukaart biedt zoveel lekkers dat we gauw weer komen!",
+    name: "Sabine",
+    meta: "5 reviews",
+    when: "2 maanden geleden",
+    stars: 5,
+  },
+  {
+    quote: "Lekkere cappuccino met havermelk. Taartjes, mmmm. Leuk klein zaakje met buitenterras. Aardige mensen.",
+    name: "Edwin Bezemer",
+    meta: "Local Guide · 110 reviews",
+    when: "9 maanden geleden",
+    stars: 5,
+  },
+];
+
 const hours = [
   { day: "Maandag", time: "Gesloten" },
   { day: "Dinsdag", time: "9:00 — 17:30" },
@@ -363,6 +388,60 @@ const marquee = [
     </div>
   </section>
 
+  <!-- REVIEWS -->
+  <section class="py-24 md:py-32">
+    <div class="container-kp">
+      <div class="grid md:grid-cols-12 gap-8 items-end mb-14">
+        <div class="md:col-span-7" data-reveal>
+          <p class="eyebrow">Reviews</p>
+          <h2 class="text-4xl sm:text-5xl lg:text-6xl mt-5 font-display max-w-2xl">
+            Wat gasten zeggen.
+          </h2>
+        </div>
+        <div class="md:col-span-5 md:flex md:justify-end" data-reveal>
+          <a
+            href="https://www.google.com/search?q=Het+Koffiepand+Middelburg+reviews"
+            target="_blank"
+            rel="noopener"
+            class="google-badge"
+            aria-label="Bekijk reviews op Google"
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.5-.2-2.3H12v4.3h5.9c-.3 1.4-1 2.6-2.2 3.4v2.8h3.6c2.1-2 3.2-4.8 3.2-8.2Z"/>
+              <path fill="#34A853" d="M12 23c2.9 0 5.4-1 7.2-2.6l-3.6-2.8c-1 .7-2.3 1.1-3.7 1.1-2.8 0-5.2-1.9-6.1-4.5H2.2v2.9C4 20.7 7.7 23 12 23Z"/>
+              <path fill="#FBBC05" d="M5.9 14.2c-.2-.7-.4-1.4-.4-2.2 0-.8.1-1.5.4-2.2V6.9H2.2C1.4 8.5 1 10.2 1 12s.4 3.5 1.2 5.1l3.7-2.9Z"/>
+              <path fill="#EA4335" d="M12 5.4c1.6 0 3 .5 4.1 1.6l3.1-3.1C17.3 2 14.8 1 12 1 7.7 1 4 3.3 2.2 6.9l3.7 2.9C6.8 7.3 9.2 5.4 12 5.4Z"/>
+            </svg>
+            <span>Lees meer op Google</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-5">
+        {reviews.map((r, i) => (
+          <article class="review-card" data-reveal style={`transition-delay: ${i * 90}ms`}>
+            <div class="flex items-center gap-1 text-(--color-terra)">
+              {Array.from({ length: r.stars }).map(() => <Icon name="star" size={14} />)}
+            </div>
+            <blockquote class="mt-5 text-[1rem] leading-relaxed text-(--color-ink-2)">
+              "{r.quote}"
+            </blockquote>
+            <footer class="mt-6 pt-5 border-t border-(--color-line)">
+              <p class="text-sm font-medium">{r.name}</p>
+              <p class="text-xs text-(--color-ink-soft) mt-0.5">
+                {r.meta} <span class="opacity-50">·</span> {r.when}
+              </p>
+            </footer>
+          </article>
+        ))}
+      </div>
+
+      <p class="mt-10 text-xs text-(--color-ink-soft) text-center">
+        Reviews ongewijzigd overgenomen van Google. Bekijk alle reviews voor het volledige beeld.
+      </p>
+    </div>
+  </section>
+
   <!-- INSTAGRAM CTA -->
   <section class="py-24 md:py-32">
     <div class="container-kp">
@@ -560,6 +639,43 @@ const marquee = [
   .gallery-item:hover img { transform: scale(1.04); }
   @media (min-width: 1024px) {
     .gallery-item { min-height: unset; height: 100%; }
+  }
+
+  /* REVIEWS */
+  .review-card {
+    position: relative;
+    padding: 1.75rem;
+    background: var(--color-cream);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    transition: transform 0.5s var(--ease-out-quart), border-color 0.3s;
+    display: flex;
+    flex-direction: column;
+  }
+  .review-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--color-moss-soft);
+  }
+  .review-card blockquote { flex: 1; }
+  .review-card blockquote::before,
+  .review-card blockquote::after { content: none; }
+
+  .google-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.7rem 1.1rem;
+    background: var(--color-cream);
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--color-ink);
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .google-badge:hover {
+    border-color: var(--color-ink);
+    transform: translateY(-1px);
   }
 
   /* INFO PILLS (na menu) */
