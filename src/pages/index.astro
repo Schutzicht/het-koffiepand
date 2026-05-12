@@ -1,0 +1,659 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+
+// USP-teksten 1-op-1 van koffiepand.nl
+const pillars = [
+  {
+    icon: "leaf",
+    title: "Vegan",
+    body: "Vrijwel alle gerechten op onze kaart kunnen wij veganistisch en/of vegetarisch maken.",
+  },
+  {
+    icon: "map-pin",
+    title: "Lokaal",
+    body: "Vanwege het milieu werken we zoveel mogelijk met producten uit de streek.",
+  },
+  {
+    icon: "recycle",
+    title: "No waste",
+    body: "In het kader van duurzaamheid proberen wij onze afvalproductie tot het minimum te beperken.",
+  },
+  {
+    icon: "wheat",
+    title: "Biologisch",
+    body: "Wij werken voornamelijk biologisch en verdiepen ons in de achtergrond van onze producten.",
+  },
+];
+
+// Menu items komen 1-op-1 uit Menukaart_hetKoffiepand.pdf
+// Markers: * vegan-optie mogelijk · ** glutenvrij-optie mogelijk
+const menuCategories = [
+  {
+    tag: "All day breakfast",
+    subtitle: "De hele dag door",
+    items: [
+      { name: "Pancakes", tags: "*", desc: "Pumpkin spice, herfstfruit, gecarameliseerde noten & maple syrup. Of: vegan bacon, blauwe bes & maple syrup.", price: "9,50" },
+      { name: "Zoete aardappelwafel", tags: "*", desc: "Met scrambled eggs, avocado & oude kaasrasp.", price: "12,50" },
+      { name: "Bagel", tags: "**", desc: "Met zalm, crème fraîche & avocado.", price: "9,50" },
+      { name: "Granolabowl", tags: "* **", desc: "Met in chai gebakken appeltjes, peer & volle yoghurt.", price: "9,50" },
+      { name: "Huisgemaakte scones", tags: "*", desc: "Met clotted cream, chutney van Prpvl-fruit & vers fruit.", price: "9,50" },
+      { name: "Bananenbrood", tags: "*", desc: "Met koffieroom, banaan, gecarameliseerde noten & chocoladesprinkles.", price: "7,50" },
+      { name: "Ontbijtplank", tags: "*", desc: "Verrassingsselectie van bovenstaande gerechtjes (p.p.).", price: "14,50" },
+    ],
+  },
+  {
+    tag: "All day lunch",
+    subtitle: "Lunchgerechten & tosti's",
+    items: [
+      { name: "Smashed avo toast", tags: "* **", desc: "Met gepocheerd ei, tomaat & hummus. Bijgerechten: +zalm of vegan bacon 3,90 · +extra ei 1,50 · +(vegan) feta 2,50.", price: "12,50" },
+      { name: "Brood geroosterde pompoen", tags: "* **", desc: "Met cottage cheese, siracha mayo & rode paprikasaus.", price: "12,50" },
+      { name: "Brood vegan kroketten van Cas&Kas", tags: "*", desc: "Met vegan mosterdmayo.", price: "12,50" },
+      { name: "Cilbir", tags: "**", desc: "Met gepocheerde eieren, chiliboter, knoflookyoghurt & pitabrood.", price: "14,50" },
+      { name: "Herfstsalade", tags: "* **", desc: "Met geitenkaaskroketjes, peer, granaatappel, geitenkaas, gecarameliseerde noten & toast met huisgemaakte dip.", price: "17,50" },
+      { name: "Lamhacun (Turkse pizza)", tags: "*", desc: "Met vegan kebab, komkommer, rode ui & knoflooksaus.", price: "14,50" },
+      { name: "Wisselende soep", tags: "* **", desc: "Met brood & dip.", price: "8,90" },
+      { name: "Lunchplank", tags: "*", desc: "Verrassingsselectie van bovenstaande gerechtjes (p.p.).", price: "17,50" },
+      { name: "Tosti's", tags: "kies uit 4", desc: "Kaas & kruidenkaas · avocado & geitenkaas · pindakaas, kaas & sambal · paddenstoel, kruiden & oudekaas.", price: "8,90 — 9,90" },
+    ],
+  },
+  {
+    tag: "Hot drinks & cakes",
+    subtitle: "Toevoegingen: shot +0,80 · slagroom +0,50 · havermelk & kokosmelk gratis",
+    items: [
+      { name: "Espresso", desc: "", price: "2,50" },
+      { name: "Espresso macchiato", desc: "", price: "2,70" },
+      { name: "Americano", desc: "", price: "3,20" },
+      { name: "Cortado", desc: "", price: "3,30" },
+      { name: "Cappuccino", desc: "", price: "3,90" },
+      { name: "Flat white", desc: "", price: "4,70" },
+      { name: "Cafe latte", desc: "", price: "3,90" },
+      { name: "Latte macchiato", desc: "", price: "4,50" },
+      { name: "Chai latte", desc: "Ook dirty chai +0,80.", price: "4,50" },
+      { name: "Matcha latte", desc: "", price: "4,50" },
+      { name: "Warme appelchai", desc: "", price: "4,50" },
+      { name: "Warme chocolademelk", desc: "Ook vegan optie.", price: "3,90" },
+      { name: "Thee Yogi", desc: "", price: "3,20" },
+      { name: "Wilde thee", desc: "Oest&Monotypes.", price: "3,50" },
+      { name: "Verse muntthee / gemberthee", desc: "Gember +citroen of sinaasappel.", price: "3,50" },
+      { name: "Winterthee", desc: "Sinaasappel, kaneel, steranijs en rozemarijn.", price: "3,90" },
+      { name: "Appeltaart", desc: "", price: "4,70" },
+      { name: "Carrotcake", tags: "*", desc: "", price: "4,50" },
+      { name: "Wisselend (vegan) gebak", tags: "*", desc: "Vraag naar de cake of the day.", price: "4,50 — 4,90" },
+    ],
+  },
+  {
+    tag: "Cold drinks, snacks & bier/wijn",
+    subtitle: "Inclusief Zeeuwse en lokale brouwsels",
+    items: [
+      { name: "Fritz-Kola", desc: "Kola · Light · Orange · Rabarber · Citroen.", price: "3,50" },
+      { name: "Huisgemaakte ijsthee", desc: "Peer-Papaya of Perzik-Granaatappel.", price: "4,50" },
+      { name: "Soof", desc: "Sparkling: Rose-Kardemom-Apple-Pear of Blackcurrant-Lavender-Apple.", price: "3,90" },
+      { name: "Huisgemaakte limonade", desc: "", price: "4,50" },
+      { name: "Wostok", desc: "Dadel-Granaatappel of Peer-Rozemarijn.", price: "4,50" },
+      { name: "Fentimans", desc: "Gingerbeer · Tonic · Rose Lemonade.", price: "3,90" },
+      { name: "Degrow RAW Kombucha", desc: "", price: "4,90" },
+      { name: "IJskoffie / Iced chai / Iced matcha", desc: "", price: "4,50" },
+      { name: "Verse jus / appelsap", desc: "Jus +framboos 0,50 · extra groot 1,00.", price: "3,50" },
+      { name: "Bitterballen / truffelkroketjes", tags: "*", desc: "", price: "7,90" },
+      { name: "Groentekroketjes / kaastengels", desc: "", price: "7,50" },
+      { name: "Nacho's", tags: "* **", desc: "Guacamole, zure room, tomaat, jalapeños & kaas uit de oven.", price: "12,50" },
+      { name: "Combiplank", tags: "*", desc: "Verschillende frituursnacks.", price: "17,50" },
+      { name: "Gulpener Ur Pilsener", desc: "", price: "3,20" },
+      { name: "Gebrouwen door Vrouwen", desc: "Bloesem Blond.", price: "5,90" },
+      { name: "Brouwerij Kees", desc: "Hazy Sunrise (NEIPA) · Zeeuwse Lust (Weizen) · It's a Blond.", price: "5,90" },
+      { name: "De Koninck", desc: "Bolleke 4,90 of Triple d'Anvers 5,90.", price: "4,90 — 5,90" },
+      { name: "Dutch Bargain", desc: "Zeewit/Zeeuws blond · Designated Dryver 0.0.", price: "4,90 — 5,90" },
+      { name: "Wijn", desc: "Cabo da Roca branco · Nius bobal rosé · Vi de OT Negre Merlot.", price: "4,90" },
+    ],
+  },
+];
+
+const gallery = [
+  { src: "/photos/interieur.jpg", alt: "Interieur van Het Koffiepand met planten en bakstenen muur", span: "lg:col-span-7 lg:row-span-2" },
+  { src: "/photos/breakfast-flatlay.jpg", alt: "Slow breakfast flatlay met pannenkoeken, wrap en granola", span: "lg:col-span-5" },
+  { src: "/photos/avocado-tartaar.jpg", alt: "Avocado tartaar op zuurdesem met eetbare bloemen", span: "lg:col-span-5" },
+  { src: "/photos/lunch-bagel.jpg", alt: "Lunchgerecht met bagel en salade", span: "lg:col-span-4" },
+  { src: "/photos/takeaway.jpg", alt: "Takeaway lunch met fritz-kola op het terras", span: "lg:col-span-4" },
+  { src: "/photos/lokaal-bier.jpg", alt: "Lokaal bier gebrouwen door vrouwen", span: "lg:col-span-4" },
+];
+
+const hours = [
+  { day: "Maandag", time: "Gesloten" },
+  { day: "Dinsdag", time: "9:00 — 17:30" },
+  { day: "Woensdag", time: "9:00 — 17:30" },
+  { day: "Donderdag", time: "9:00 — 17:30" },
+  { day: "Vrijdag", time: "9:00 — 17:30" },
+  { day: "Zaterdag", time: "9:00 — 17:30" },
+  { day: "Zondag", time: "Gesloten" },
+];
+
+// Marquee-items komen uit de menukaart en de USP-pijlers van koffiepand.nl
+const marquee = [
+  "All day breakfast",
+  "Lunch & tosti's",
+  "Hot drinks & cakes",
+  "Vegan op aanvraag",
+  "Glutenvrij op aanvraag",
+  "Ook to go",
+  "10% studentenkorting",
+  "Korte Geere 19",
+  "@hetkoffiepand",
+];
+---
+
+<Base>
+  <a id="top"></a>
+
+  <!-- HERO -->
+  <section class="relative pt-32 md:pt-40 pb-20 md:pb-28 overflow-hidden">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container-kp relative">
+      <div class="grid lg:grid-cols-12 gap-10 lg:gap-16 items-end">
+        <div class="lg:col-span-7" data-reveal>
+          <p class="eyebrow flex items-center gap-3">
+            <span class="w-8 h-px bg-(--color-ink-soft) block"></span>
+            Korte Geere 19, Middelburg
+          </p>
+          <h1 class="hero-title">
+            Het <span class="hero-title__outline" data-color="moss">prachtig</span><br class="hidden sm:block" />
+            <span class="hero-title__outline" data-color="terra">Koffiepand</span>
+          </h1>
+          <p class="mt-7 max-w-xl text-lg text-(--color-ink-2)/85 leading-relaxed">
+            U kunt bij ons terecht voor heerlijke koffie en thee, verschillende soorten (biologische) frisdranken, bier, wijn en een ruime keuze aan (vegan) taartjes, cakes, slow breakfast, lunch en afternoon snacks. Van harte welkom!
+          </p>
+          <div class="mt-9 flex flex-wrap gap-3">
+            <a href="#bezoek" class="btn-primary">
+              Reserveer een tafel
+              <Icon name="arrow-right" size={16} />
+            </a>
+            <a href="#menu" class="btn-ghost">Bekijk het menu</a>
+          </div>
+          <div class="mt-10 flex flex-wrap gap-x-8 gap-y-4 text-sm">
+            <div class="flex items-center gap-2 text-(--color-ink-soft)">
+              <Icon name="map-pin" size={16} class="text-(--color-moss)" />
+              Korte Geere 19, Middelburg
+            </div>
+            <div class="flex items-center gap-2 text-(--color-ink-soft)">
+              <Icon name="clock" size={16} class="text-(--color-moss)" />
+              Di t/m za, 9:00 — 17:30
+            </div>
+            <div class="flex items-center gap-2 text-(--color-ink-soft)">
+              <Icon name="leaf" size={14} class="text-(--color-terra)" />
+              Vegan & glutenvrij op aanvraag
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 relative" data-reveal>
+          <div class="hero-frame image-grain">
+            <img
+              src="/photos/taart-koffie.jpg"
+              alt="Cappuccino, kruimeltaart en huisgemaakte cheesecake op tafel"
+              class="w-full h-full object-cover"
+              loading="eager"
+            />
+          </div>
+          <div class="hero-card-1">
+            <p class="eyebrow">Uit de vitrine</p>
+            <p class="mt-2 text-sm leading-snug">Vegan Frambozen Crumble.</p>
+          </div>
+          <div class="hero-card-2">
+            <Icon name="leaf" size={16} class="text-(--color-moss)" />
+            <span>To Go &middot; Geniet waar u wilt</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Marquee -->
+  <section class="relative py-6 border-y border-(--color-line) bg-(--color-cream) overflow-hidden">
+    <div class="marquee-track gap-12 px-6">
+      {[...marquee, ...marquee].map((label) => (
+        <div class="flex items-center gap-12 text-sm uppercase tracking-[0.32em] text-(--color-ink-soft)">
+          <span>{label}</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-(--color-terra)"></span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- OVER -->
+  <section id="over" class="py-24 md:py-32">
+    <div class="container-kp grid lg:grid-cols-12 gap-12 lg:gap-20">
+      <div class="lg:col-span-5" data-reveal>
+        <p class="eyebrow">Over ons</p>
+        <h2 class="text-4xl sm:text-5xl lg:text-6xl mt-5 font-display">
+          Van harte welkom!
+        </h2>
+        <div class="mt-10 image-grain rounded-(--radius-card) overflow-hidden border border-(--color-line)">
+          <img
+            src="/photos/breakfast-flatlay.jpg"
+            alt="Slow breakfast op tafel — pannenkoeken, granola, smoothie en koffie"
+            class="w-full aspect-[4/5] object-cover"
+            loading="lazy"
+          />
+        </div>
+      </div>
+      <div class="lg:col-span-6 lg:col-start-7 space-y-6 text-(--color-ink-2)/85 text-[1.15rem] leading-relaxed" data-reveal>
+        <p>
+          U kunt in het prachtig Koffiepand aan de Korte Geere 19 te Middelburg terecht voor heerlijke koffie en thee, verschillende soorten (biologische) frisdranken, bier, wijn en een ruime keuze aan (vegan) taartjes, cakes, slow breakfast, lunch en afternoon snacks!
+        </p>
+        <div class="flex flex-wrap gap-2 pt-4">
+          <span class="tag-pill">Biologisch</span>
+          <span class="tag-pill">Vegan op aanvraag</span>
+          <span class="tag-pill">Glutenvrij op aanvraag</span>
+          <span class="tag-pill">Ook to go</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UNIEK / PIJLERS -->
+  <section id="uniek" class="py-24 md:py-32 bg-(--color-bone-2) bg-grain relative">
+    <div class="container-kp relative">
+      <div class="mb-14" data-reveal>
+        <p class="eyebrow">Vier pijlers</p>
+        <h2 class="text-4xl sm:text-5xl lg:text-6xl mt-5 font-display max-w-2xl">
+          Dit maakt ons uniek.
+        </h2>
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {pillars.map((p, i) => (
+          <article class="pillar-card" data-reveal style={`transition-delay: ${i * 90}ms`}>
+            <div class="pillar-icon">
+              <Icon name={p.icon} size={22} />
+            </div>
+            <h3 class="text-2xl font-display mt-7">{p.title}</h3>
+            <p class="mt-3 text-[0.95rem] leading-relaxed text-(--color-ink-2)/80">{p.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section id="menu" class="py-24 md:py-32">
+    <div class="container-kp">
+      <div class="grid md:grid-cols-12 gap-10 items-end mb-14">
+        <div class="md:col-span-7" data-reveal>
+          <p class="eyebrow">Menu</p>
+          <h2 class="text-4xl sm:text-5xl lg:text-6xl mt-5 font-display max-w-3xl">
+            Bekijk ons volledige menu!
+          </h2>
+          <p class="mt-5 text-(--color-ink-soft) max-w-xl leading-relaxed">
+            <span class="font-mono text-xs mr-1">*</span> vegan-optie mogelijk &nbsp;·&nbsp;
+            <span class="font-mono text-xs mr-1">**</span> glutenvrij-optie mogelijk
+          </p>
+        </div>
+        <div class="md:col-span-5 flex md:justify-end gap-3 flex-wrap" data-reveal>
+          <a href="/Menukaart_hetKoffiepand.pdf" class="btn-ghost" target="_blank" rel="noopener">
+            Volledig menu (PDF)
+          </a>
+          <a href="#bezoek" class="btn-primary">Boek een tafel</a>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-x-16 gap-y-14">
+        {menuCategories.map((cat) => (
+          <div data-reveal>
+            <div class="flex items-baseline justify-between gap-6 pb-5 border-b border-(--color-line)">
+              <h3 class="text-3xl font-display">{cat.tag}</h3>
+              <span class="text-xs uppercase tracking-[0.18em] text-(--color-ink-soft) text-right max-w-[55%]">{cat.subtitle}</span>
+            </div>
+            <ul class="mt-6 space-y-6">
+              {cat.items.map((it) => (
+                <li class="flex gap-6 items-start">
+                  <div class="flex-1">
+                    <div class="flex items-baseline justify-between gap-4">
+                      <h4 class="text-lg font-display">
+                        {it.name}
+                        {it.tags && (
+                          <span class="ml-2 font-mono text-xs text-(--color-terra) tracking-wider">{it.tags}</span>
+                        )}
+                      </h4>
+                      <span class="hidden sm:block flex-1 mx-3 border-b border-dotted border-(--color-line) translate-y-[-4px]"></span>
+                      <span class="font-mono text-sm tabular-nums text-(--color-ink-2)">€{it.price}</span>
+                    </div>
+                    {it.desc && <p class="text-sm text-(--color-ink-soft) mt-1.5 leading-relaxed">{it.desc}</p>}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-16 grid sm:grid-cols-3 gap-4">
+        <div class="info-pill">
+          <Icon name="leaf" size={18} class="text-(--color-moss)" />
+          <p><strong class="font-medium">Vegan & glutenvrij</strong><br/><span class="text-(--color-ink-soft)">Vraag naar de mogelijkheden — bijna altijd te regelen.</span></p>
+        </div>
+        <div class="info-pill">
+          <Icon name="arrow-right" size={18} class="text-(--color-terra)" />
+          <p><strong class="font-medium">Ook to go</strong><br/><span class="text-(--color-ink-soft)">Pak de hele lunch of een koffie mee onderweg.</span></p>
+        </div>
+        <div class="info-pill">
+          <Icon name="star" size={16} class="text-(--color-terra)" />
+          <p><strong class="font-medium">10% studentenkorting</strong><br/><span class="text-(--color-ink-soft)">Op vertoon van je studentenpas.</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SFEER / GALLERY -->
+  <section id="sfeer" class="py-24 md:py-32 bg-(--color-ink) text-(--color-cream)">
+    <div class="container-kp">
+      <div class="mb-12" data-reveal>
+        <p class="eyebrow text-(--color-moss-soft)">Sfeer</p>
+        <h2 class="text-4xl sm:text-5xl lg:text-6xl mt-5 font-display text-(--color-cream) max-w-2xl">
+          Een blik in het pand.
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 lg:auto-rows-[180px] gap-3 md:gap-4">
+        {gallery.map((g, i) => (
+          <figure class={`gallery-item ${g.span ?? ""}`} data-reveal style={`transition-delay: ${i * 70}ms`}>
+            <img src={g.src} alt={g.alt} loading="lazy" />
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTAGRAM CTA -->
+  <section class="py-24 md:py-32">
+    <div class="container-kp">
+      <div class="instagram-card" data-reveal>
+        <div class="instagram-card__text">
+          <p class="eyebrow">Instagram</p>
+          <h2 class="text-4xl sm:text-5xl mt-4 font-display max-w-xl">
+            Tag ons in jouw instapost of story!
+          </h2>
+          <a href="https://www.instagram.com/hetkoffiepand/" target="_blank" rel="noopener" class="btn-primary mt-8">
+            <Icon name="instagram" size={16} />
+            @hetkoffiepand
+          </a>
+        </div>
+        <div class="instagram-card__photo image-grain">
+          <img src="/photos/avocado-tartaar.jpg" alt="Avocado tartaar met eetbare bloemen, gepost op Instagram" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEZOEK / RESERVEREN -->
+  <section id="bezoek" class="py-24 md:py-32 bg-(--color-moss) text-(--color-cream) relative overflow-hidden">
+    <div class="container-kp relative">
+      <div class="grid lg:grid-cols-12 gap-12 lg:gap-16">
+        <div class="lg:col-span-7" data-reveal>
+          <p class="eyebrow text-(--color-moss-soft)">Reserveren</p>
+          <h2 class="text-4xl sm:text-5xl lg:text-[4.5rem] mt-5 font-display text-(--color-cream)">
+            Wilt u zeker zijn van een plekje?
+          </h2>
+          <p class="mt-7 max-w-xl text-(--color-cream)/85 leading-relaxed text-lg">
+            Laat ons dan even weten wanneer u langs wilt komen! Hieronder ziet u de openingstijden en de contactgegevens.
+          </p>
+
+          <div class="mt-10 flex flex-wrap gap-3">
+            <a href="https://wa.me/31642022378" class="cta-light">
+              <Icon name="whatsapp" size={18} />
+              WhatsApp
+            </a>
+            <a href="tel:+31642022378" class="cta-outline">
+              <Icon name="phone" size={16} />
+              +31 6 420 223 78
+            </a>
+            <a href="mailto:info@koffiepand.nl" class="cta-outline">
+              <Icon name="mail" size={16} />
+              info@koffiepand.nl
+            </a>
+          </div>
+
+          <div class="mt-12 text-sm">
+            <p class="eyebrow text-(--color-moss-soft)">Adres</p>
+            <p class="mt-3 leading-relaxed text-(--color-cream)/90">
+              Korte Geere 19, Middelburg
+            </p>
+          </div>
+        </div>
+
+        <aside class="lg:col-span-5" data-reveal>
+          <div class="hours-card">
+            <p class="eyebrow text-(--color-ink-soft)">Openingstijden</p>
+            <ul class="mt-6 divide-y divide-(--color-line)">
+              {hours.map((h) => (
+                <li class="flex items-center justify-between py-3 text-sm">
+                  <span class="text-(--color-ink)">{h.day}</span>
+                  <span class={h.time === "Gesloten" ? "text-(--color-ink-soft)" : "font-medium text-(--color-ink)"}>{h.time}</span>
+                </li>
+              ))}
+            </ul>
+            <div class="mt-6 pt-5 border-t border-(--color-line) flex items-start gap-3">
+              <Icon name="instagram" size={16} class="text-(--color-moss) mt-0.5" />
+              <p class="text-xs text-(--color-ink-soft) leading-relaxed">
+                Volg <a href="https://www.instagram.com/hetkoffiepand/" class="underline underline-offset-2" target="_blank" rel="noopener">@hetkoffiepand</a> voor het actuele aanbod.
+              </p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* HERO */
+  .hero-title {
+    font-family: var(--font-vintage);
+    font-weight: 400;
+    font-size: clamp(2.6rem, 8.5vw, 6rem);
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    text-transform: lowercase;
+    color: var(--color-ink);
+    margin-top: 1.4rem;
+  }
+  .hero-title__outline {
+    display: inline-block;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--color-ink);
+    transition: -webkit-text-stroke-color 0.3s, color 0.3s;
+  }
+  .hero-title__outline[data-color="moss"] { -webkit-text-stroke-color: var(--color-moss); }
+  .hero-title__outline[data-color="terra"] { -webkit-text-stroke-color: var(--color-terra); }
+  @media (min-width: 1280px) {
+    .hero-title__outline { -webkit-text-stroke-width: 2.5px; }
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 80% 0%, rgba(176, 98, 58, 0.10), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 0% 80%, rgba(47, 74, 54, 0.10), transparent 60%);
+    pointer-events: none;
+  }
+  .hero-frame {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-jumbo);
+    overflow: hidden;
+    background: var(--color-bone-3);
+    box-shadow:
+      0 30px 60px -30px rgba(28, 20, 16, 0.25),
+      0 10px 25px -15px rgba(28, 20, 16, 0.15);
+  }
+  .hero-card-1 {
+    position: absolute;
+    left: -8%;
+    bottom: 10%;
+    width: 220px;
+    padding: 1rem 1.1rem;
+    background: var(--color-cream);
+    border: 1px solid var(--color-line);
+    border-radius: 16px;
+    box-shadow: 0 18px 30px -20px rgba(28,20,16,0.3);
+  }
+  .hero-card-2 {
+    position: absolute;
+    right: -6%;
+    top: 8%;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.7rem 1rem;
+    background: var(--color-cream);
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    box-shadow: 0 12px 24px -14px rgba(28,20,16,0.25);
+  }
+  @media (max-width: 1024px) {
+    .hero-card-1 { left: 4%; bottom: 4%; }
+    .hero-card-2 { right: 4%; top: 4%; }
+  }
+
+  /* PILLAR CARD */
+  .pillar-card {
+    position: relative;
+    padding: 1.6rem;
+    background: var(--color-cream);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    min-height: 240px;
+    transition: transform 0.5s var(--ease-out-quart), border-color 0.3s;
+  }
+  .pillar-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--color-moss-soft);
+  }
+  .pillar-icon {
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bone-2);
+    color: var(--color-moss);
+    border: 1px solid var(--color-line);
+  }
+
+  /* GALLERY */
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #2a1e16;
+    min-height: 220px;
+  }
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.9s var(--ease-out-quart);
+  }
+  .gallery-item:hover img { transform: scale(1.04); }
+  @media (min-width: 1024px) {
+    .gallery-item { min-height: unset; height: 100%; }
+  }
+
+  /* INFO PILLS (na menu) */
+  .info-pill {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    padding: 1.1rem 1.25rem;
+    background: var(--color-cream);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+  .info-pill svg { flex-shrink: 0; margin-top: 2px; }
+
+  /* INSTAGRAM CARD */
+  .instagram-card {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    background: var(--color-cream);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-jumbo);
+    overflow: hidden;
+  }
+  @media (min-width: 768px) {
+    .instagram-card { grid-template-columns: 1.15fr 0.85fr; }
+  }
+  .instagram-card__text {
+    padding: 2.5rem;
+  }
+  @media (min-width: 1024px) {
+    .instagram-card__text { padding: 3.5rem; }
+  }
+  .instagram-card__photo {
+    position: relative;
+    min-height: 280px;
+    background: var(--color-bone-3);
+  }
+  .instagram-card__photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* BEZOEK CTAs */
+  .cta-light {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.95rem 1.6rem;
+    background: var(--color-cream);
+    color: var(--color-ink);
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: transform 0.4s var(--ease-out-quart), background 0.3s;
+    white-space: nowrap;
+  }
+  .cta-light:hover {
+    background: var(--color-terra);
+    color: var(--color-cream);
+    transform: translateY(-2px);
+  }
+  .cta-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.95rem 1.45rem;
+    background: transparent;
+    color: var(--color-cream);
+    border: 1px solid rgba(250, 245, 235, 0.4);
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: background 0.3s, border-color 0.3s;
+    white-space: nowrap;
+  }
+  .cta-outline:hover {
+    background: rgba(250, 245, 235, 0.08);
+    border-color: var(--color-cream);
+  }
+
+  /* HOURS CARD */
+  .hours-card {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    border-radius: var(--radius-jumbo);
+    padding: 2rem 1.75rem;
+    border: 1px solid var(--color-line);
+    box-shadow: 0 30px 50px -35px rgba(0,0,0,0.35);
+  }
+</style>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Het Koffiepand">
+  <rect width="64" height="64" rx="13" fill="#1C1410"/>
+  <rect x="14" y="14" width="11" height="37" fill="#F5EFE4"/>
+  <line x1="22" y1="33" x2="48" y2="17" stroke="#F5EFE4" stroke-width="10"/>
+  <line x1="22" y1="33" x2="48" y2="49" stroke="#F5EFE4" stroke-width="10"/>
+  <circle cx="55" cy="47" r="3.5" fill="#B0623A"/>
+</svg>

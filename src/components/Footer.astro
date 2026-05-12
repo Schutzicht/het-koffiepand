@@ -1,0 +1,83 @@
+---
+import Icon from "./Icon.astro";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-(--color-ink) text-(--color-cream) mt-24 md:mt-32">
+  <div class="container-kp py-16 md:py-20">
+    <div class="grid gap-12 md:grid-cols-12">
+      <div class="md:col-span-5">
+        <p class="eyebrow text-(--color-moss-soft)">Het Koffiepand</p>
+        <h3 class="text-3xl md:text-4xl mt-4 max-w-md font-display text-(--color-cream)">
+          Het prachtig Koffiepand aan de Korte Geere.
+        </h3>
+        <div class="flex gap-3 mt-8">
+          <a
+            href="https://www.instagram.com/hetkoffiepand/"
+            class="w-11 h-11 rounded-full border border-(--color-cream)/30 flex items-center justify-center hover:bg-(--color-cream) hover:text-(--color-ink) transition-colors"
+            aria-label="Instagram"
+          >
+            <Icon name="instagram" size={18} />
+          </a>
+          <a
+            href="https://wa.me/31642022378"
+            class="w-11 h-11 rounded-full border border-(--color-cream)/30 flex items-center justify-center hover:bg-(--color-cream) hover:text-(--color-ink) transition-colors"
+            aria-label="WhatsApp"
+          >
+            <Icon name="whatsapp" size={18} />
+          </a>
+          <a
+            href="mailto:info@koffiepand.nl"
+            class="w-11 h-11 rounded-full border border-(--color-cream)/30 flex items-center justify-center hover:bg-(--color-cream) hover:text-(--color-ink) transition-colors"
+            aria-label="Mail"
+          >
+            <Icon name="mail" size={18} />
+          </a>
+        </div>
+      </div>
+
+      <div class="md:col-span-3">
+        <p class="eyebrow text-(--color-moss-soft)">Bezoek</p>
+        <p class="mt-4 leading-relaxed text-sm">
+          Korte Geere 19<br />
+          4331 LE Middelburg
+        </p>
+        <p class="mt-4 leading-relaxed text-sm">
+          Dinsdag t/m zaterdag<br />
+          9:00 tot 17:30
+        </p>
+      </div>
+
+      <div class="md:col-span-4">
+        <p class="eyebrow text-(--color-moss-soft)">Contact</p>
+        <ul class="mt-4 space-y-2 text-sm">
+          <li>
+            <a href="tel:+31642022378" class="hover:text-(--color-terra-soft) transition-colors">
+              +31 6 420 223 78
+            </a>
+          </li>
+          <li>
+            <a href="mailto:info@koffiepand.nl" class="hover:text-(--color-terra-soft) transition-colors">
+              info@koffiepand.nl
+            </a>
+          </li>
+          <li class="flex gap-2 pt-3">
+            <a href="#menu" class="link-arrow text-(--color-cream) border-(--color-cream)/30">
+              Bekijk menu
+              <Icon name="arrow-right" size={14} />
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-16 pt-8 border-t border-(--color-cream)/15 flex flex-col md:flex-row gap-3 items-start md:items-center justify-between text-xs text-(--color-cream)/60">
+      <p>&copy; {year} Het Koffiepand, Middelburg.</p>
+      <p class="flex gap-5">
+        <a href="#" class="hover:text-(--color-cream)">Privacy</a>
+        <a href="#" class="hover:text-(--color-cream)">Cookies</a>
+      </p>
+    </div>
+  </div>
+</footer>
