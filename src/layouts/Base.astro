@@ -44,7 +44,7 @@ const {
           <span class="demo-intro__title-outline" data-color="terra">vooraf.</span>
         </h1>
         <p class="demo-intro__body">
-          Dit is een onepager-demo voor <strong>Het Koffiepand</strong> in Middelburg, gemaakt door Schut Marketing. Algemene info, USP-teksten, foto's en de complete menukaart komen rechtstreeks van koffiepand.nl. Een aantal kopjes, sfeer-omschrijvingen en presentatie-keuzes zijn invulling van mij voor de demo en kunnen onwaarheden bevatten.
+          Dit is een onepager-demo voor <strong>Het Koffiepand</strong> in Middelburg, gemaakt door Jorik Schut. Algemene info, USP-teksten, foto's en de complete menukaart komen rechtstreeks van koffiepand.nl. Een aantal kopjes, sfeer-omschrijvingen en presentatie-keuzes zijn invulling van mij voor de demo en kunnen onwaarheden bevatten.
         </p>
         <ul class="demo-intro__notes">
           <li>Echt: adres, openingstijden, USP-teksten, menukaart (incl. prijzen), foto's, Instagram-handle.</li>
@@ -160,6 +160,7 @@ const {
           cupFill.setAttribute("y", String(cupBottomY - fillHeight));
           cupFill.setAttribute("height", String(fillHeight));
           cup.classList.toggle("is-visible", window.scrollY > 240);
+          cup.classList.toggle("is-warm", progress > 0.45);
           cup.classList.toggle("is-full", progress > 0.94);
         };
         updateCup();
